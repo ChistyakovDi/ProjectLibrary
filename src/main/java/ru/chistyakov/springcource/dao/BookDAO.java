@@ -25,17 +25,17 @@ public class BookDAO {
     }
 
     public Book show(int id) {
-        return jdbcTemplate.query("SELECT * FROM Person WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Book.class))
+        return jdbcTemplate.query("SELECT * FROM Book WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Book.class))
                 .stream().findAny().orElse(null);
     }
 
     public void save(Book book) {
-        jdbcTemplate.update("INSERT INTO Person(full_name, year_of_birth) VALUES(?, ?)", book.getTitle(),
+        jdbcTemplate.update("INSERT INTO Book(title, author, year) VALUES(?, ?, ?)", book.getTitle(),
                 book.getAuthor(), book.getYear());
     }
 
     public void update(int id, Book updatedBook) {
-        jdbcTemplate.update("UPDATE Person SET title=?, author=?, year=? WHERE id=?", updatedBook.getTitle(),
+        jdbcTemplate.update("UPDATE Book SET title=?, author=?, year=? WHERE id=?", updatedBook.getTitle(),
                 updatedBook.getAuthor(), updatedBook.getYear(), id);
     }
 
@@ -46,7 +46,7 @@ public class BookDAO {
     // join таблицы person и book -> человек, которому принадлежит книга с указанным id
     public Optional<Person> getBookOwner(int id) {
         return jdbcTemplate.query("SELECT Person.* FROM Book JOIN Person ON Book.person_id = Person.id" +
-                        "WHERE Book.id=?", new Object[] {id}, new BeanPropertyRowMapper<>(Person.class))
+                "WHERE Book.id = ?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class))
                         .stream().findAny();
     }
 
@@ -57,7 +57,7 @@ public class BookDAO {
 
     // освобождение книги
     public void release(int id) {
-        jdbcTemplate.update("UPDATE Book SET  persom_id=NULL WHERE id=?, id");
+        jdbcTemplate.update("UPDATE Book SET  persom_id=NULL WHERE id=?", id);
     }
 
 }

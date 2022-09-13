@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/people")
+@RequestMapping("/books")
 public class BooksController {
 
     private final BookDAO bookDAO;
@@ -29,7 +29,7 @@ public class BooksController {
     @GetMapping()
     public String index(Model model) {
         model.addAttribute("books", bookDAO.index());
-        return "books/index";
+        return "/books/index";
     }
 
     @GetMapping("/{id}")
