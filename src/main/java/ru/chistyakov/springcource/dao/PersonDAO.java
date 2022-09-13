@@ -1,7 +1,6 @@
 package ru.chistyakov.springcource.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -22,11 +21,11 @@ public class PersonDAO {
     }
 
     public List<Person> index() {
-        return jdbcTemplate.query("SELECT * FROM Person", new BeanPropertyRowMapper<>(Person.class));
+        return jdbcTemplate.query("SELECT * FROM Person", new PersonMapper());
     }
 
     public Person show(int id) {
-        return jdbcTemplate.query("SELECT * FROM Person WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class))
+        return jdbcTemplate.query("SELECT * FROM Person WHERE id=?", new Object[]{id}, new PersonMapper())
                 .stream().findAny().orElse(null);
     }
 
@@ -52,6 +51,6 @@ public class PersonDAO {
 
      public List<Book> getBooksByPersonId(int id) {
          return jdbcTemplate.query("SELECT * FROM Book WHERE person_id=?", new Object[] {id},
-                 new BeanPropertyRowMapper<>(Book.class));
+                 new BookMapper());
      }
 }

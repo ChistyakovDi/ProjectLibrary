@@ -21,11 +21,11 @@ public class BookDAO {
     }
 
     public List<Book> index() {
-        return jdbcTemplate.query("SELECT * FROM Book", new BeanPropertyRowMapper<>(Book.class));
+        return jdbcTemplate.query("SELECT * FROM Book", new BookMapper());
     }
 
     public Book show(int id) {
-        return jdbcTemplate.query("SELECT * FROM Book WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Book.class))
+        return jdbcTemplate.query("SELECT * FROM Book WHERE id=?", new Object[]{id}, new BookMapper())
                 .stream().findAny().orElse(null);
     }
 
@@ -45,8 +45,8 @@ public class BookDAO {
 
     // join таблицы person и book -> человек, которому принадлежит книга с указанным id
     public Optional<Person> getBookOwner(int id) {
-        return jdbcTemplate.query("SELECT Person.* FROM Book JOIN Person ON Book.person_id = Person.id" +
-                "WHERE Book.id = ?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class))
+        return jdbcTemplate.query("SELECT * FROM Person JOIN Book ON Book.person_id = Person.id" +
+                " WHERE Book.id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Person.class))
                         .stream().findAny();
     }
 
@@ -57,7 +57,7 @@ public class BookDAO {
 
     // освобождение книги
     public void release(int id) {
-        jdbcTemplate.update("UPDATE Book SET  persom_id=NULL WHERE id=?", id);
+        jdbcTemplate.update("UPDATE Book SET  person_id=NULL WHERE id=?", id);
     }
 
 }
